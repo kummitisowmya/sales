@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Pending Payments | Sales Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Pending Payments</h2>
+
+    <!-- Debugging: Check if pending_payments is passed -->
+    {% if not pending_payments %}
+        <div class="alert alert-warning" role="alert">
+            No pending payments data found. Please check the database or query.
+        </div>
+    {% endif %}
+
+    <!-- Display Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Pending Payments Table -->
+    {% if pending_payments %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Due Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in pending_payments %}
+                    <tr>
+                        <td>{{ payment.student.name }}</td>
+                        <td>${{ payment.due_amount }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No pending payments.</p>
+    {% endif %}
+</div>
+{% endblock %}

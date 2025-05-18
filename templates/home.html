@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home-Sales Management{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content text-center">
+        <h1 class="display-3 fw-bold">Welcome to Sales Management</h1>
+        <p class="lead mt-3">Streamline student enrollments, track payments, and manage sales performance with our sales management system</p>
+        <a href="mailto:sowmyakummiti@gmail.com?cc=sowmyakummiti@gmail.com&bcc=kummithasoumya20@gmail.com&subject=Sales Report"  class="btn btn-primary btn-lg mt-4" target="_top">Send mail</a>
+    </div>
+</div>
+
+<style>
+    /* Hero Section Styling */
+    .hero-section {
+        background-image: url("{% static 'images.webp' %}"); /* Background image */
+        background-size: cover; /* Cover the entire section */
+        background-position: center; /* Center the image */
+        height: 100vh; /* Full viewport height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white; /* White text for contrast */
+        position: relative;
+    }
+
+    /* Overlay to darken the background image */
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+        z-index: 1;
+    }
+
+    /* Hero Content */
+    .hero-content {
+        position: relative;
+        z-index: 2; /* Ensure text is above the overlay */
+    }
+
+    h1 {
+        font-size: 3.5em; /* Large heading */
+        color: white; /* White text */
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5); /* Text shadow for better readability */
+    }
+
+    p {
+        font-size: 1.5em; /* Larger paragraph text */
+        color: white; /* White text */
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); /* Text shadow for better readability */
+    }
+
+    .btn-primary {
+        background-color: #1abc9c; /* Green button */
+        border: none;
+        padding: 12px 30px;
+        font-size: 1.2em;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #16a085; /* Darker green on hover */
+        transform: translateY(-3px); /* Slight lift effect */
+    }
+</style>
+{% endblock %}

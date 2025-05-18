@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Training Class | Sales Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow">
+                <div class="card-body p-5">
+                    <h2 class="card-title text-center mb-4">Add Training Class</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_name" class="form-label">Class Name</label>
+                            <input type="text" name="name" id="id_name" class="form-control" placeholder="Enter class name" required>
+                            {% if form.name.errors %}
+                                <div class="text-danger small mt-2">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label">Description</label>
+                            <textarea name="description" id="id_description" class="form-control" placeholder="Enter description" rows="3"></textarea>
+                            {% if form.description.errors %}
+                                <div class="text-danger small mt-2">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_start_date" class="form-label">Start Date</label>
+                            <input type="date" name="start_date" id="id_start_date" class="form-control" required>
+                            {% if form.start_date.errors %}
+                                <div class="text-danger small mt-2">{{ form.start_date.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_end_date" class="form-label">End Date</label>
+                            <input type="date" name="end_date" id="id_end_date" class="form-control" required>
+                            {% if form.end_date.errors %}
+                                <div class="text-danger small mt-2">{{ form.end_date.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Add Class</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom Styling */
+    .card {
+        border-radius: 10px;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 10px;
+        font-size: 1.1em;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .text-danger {
+        font-size: 0.9em;
+    }
+</style>
+{% endblock %}

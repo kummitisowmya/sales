@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard | Sales Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+    <!-- Date Range Filter -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm p-3 mb-4">
+                <h3 class="text-center mb-3">Filter Data</h3>
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="startDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="startDate" name="start_date">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="endDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="endDate" name="end_date">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary mt-4">Apply Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row text-center">
+        <!-- Total Students -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-3 text-white" style="background: linear-gradient(135deg, #42A5F5, #64B5F6);">
+                <h4>Total Students</h4>
+                <p class="fs-3">{{ total_students }}</p>
+            </div>
+        </div>
+        <!-- Total Collected -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-3 text-white" style="background: linear-gradient(135deg, #4CAF50, #81C784);">
+                <h4>Total Collected</h4>
+                <p class="fs-3">₹{{ total_collected }}</p>
+            </div>
+        </div>
+        <!-- Total Pending -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-3 text-white" style="background: linear-gradient(135deg, #FFA726, #FFB74D);">
+                <h4>Total Pending</h4>
+                <p class="fs-3">₹{{ total_pending }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Section -->
+
+    <!-- Charts Section -->
+    <div class="row mt-4">
+        <!-- Bar Graph -->
+        <div class="col-md-8">
+            <div class="card shadow-sm p-3 mb-4">
+                <h3 class="text-center mb-3">Sales Collection by Salesperson</h3>
+                <canvas id="salesBarChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-4">
+                <h3 class="text-center mb-3">Payment Status Distribution</h3>
+                <canvas id="paymentPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Data Table -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm p-3">
+                <h3 class="text-center mb-3">Sales Data</h3>
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Salesperson</th>
+                            <th>Total Collected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sales in sales_data %}
+                        <tr>
+                            {% if sales.user.role == 'sales' %}
+                                <td>{{ sales.user.get_full_name|default:sales.user.username }}</td>
+                                <td>₹{{ sales.total_collection|default:"0.00" }}</td>
+                            {% endif %}
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No sales data available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Student Progress Table -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow-sm p-3">
+            <h3 class="text-center mb-3">Student Progress</h3>
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Student</th>
+                        <th>Training Class</th>
+                        <th>Total Fees</th>
+                        <th>Amount Paid</th>
+                        <th>Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for progress in student_progress %}
+                        <tr>
+                            <td>{{ progress.name }}</td>
+                            <td>{{ progress.training_class }}</td>
+                            <td>₹{{ progress.total_fees }}</td>
+                            <td>₹{{ progress.total_paid }}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ progress.progress }}%;" aria-valuenow="{{ progress.progress }}" aria-valuemin="0" aria-valuemax="100">
+                                        {{ progress.progress }}%
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No student progress data available.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    <div class="text-end mb-3">
+    <a href="{% url 'download_sales_excel' %}" class="btn btn-success">
+        Download Sales Data (Excel)
+    </a>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Bar Chart
+        var barCtx = document.getElementById('salesBarChart').getContext('2d');
+        var salesBarChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ salespersons|safe }},
+                datasets: [{
+                    label: 'Total Collection (₹)',
+                    data: {{ collections|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Pie Chart
+        var pieCtx = document.getElementById('paymentPieChart').getContext('2d');
+        var paymentPieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Paid', 'Pending', 'Not Updated'],
+                datasets: [{
+                    data: [{{ paid_count }}, {{ pending_count }}, {{ not_updated_count }}],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)', // Paid (Green)
+                        'rgba(255, 206, 86, 0.6)', // Pending (Yellow)
+                        'rgba(153, 102, 255, 0.6)' // Not Updated (Purple)
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    });
+</script>
+<!-- Custom Styling -->
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table thead th {
+        background-color: #2c3e50;
+        color: #fff;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.075);
+    }
+
+    canvas {
+        max-height: 400px;
+    }
+</style>
+{% endblock %}

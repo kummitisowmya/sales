@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Enroll Student | Sales Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5"> <!-- Narrower form container -->
+            <div class="card shadow-sm p-4"> <!-- Added card for better UI -->
+                <h2 class="text-center mb-4">Enroll a Student</h2> <!-- Centered heading -->
+
+                <!-- Display Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Enrollment Form -->
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- Student Name -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Student Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" required>
+                    </div>
+
+                    <!-- Training Class -->
+                    <div class="mb-3">
+                        <label for="training_class" class="form-label">Training Class</label>
+                        <select class="form-select" id="training_class" name="training_class" required>
+                            <option value="" disabled selected>Select a class</option>
+                            {% for cls in classes %}
+                                <option value="{{ cls.id }}">{{ cls.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Total Fees -->
+                    <div class="mb-3">
+                        <label for="total_fees" class="form-label">Total Fees</label>
+                        <input type="number" class="form-control" id="total_fees" name="total_fees" step="0.01" required>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">Enroll Student</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    /* Card Styling */
+    .card {
+        border: none;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form Styling */
+    .form-control, .form-select {
+        border-radius: 8px;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #1abc9c;
+        box-shadow: 0 0 5px rgba(26, 188, 156, 0.5);
+    }
+
+    /* Button Styling */
+    .btn-success {
+        background-color: #1abc9c;
+        border: none;
+        padding: 12px;
+        font-size: 1.1em;
+        transition: background-color 0.3s;
+    }
+
+    .btn-success:hover {
+        background-color: #16a085;
+    }
+
+    /* Alert Styling */
+    .alert {
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 20px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .card {
+            padding: 20px;
+        }
+
+        .btn-success {
+            font-size: 1em;
+        }
+    }
+</style>
+{% endblock %}
