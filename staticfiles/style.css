@@ -1,0 +1,24 @@
+/* Full-window background image */
+.hero {
+    background-image: url('{% static "images/institute.jpg" %}'); /* Replace with your image path */
+    background-size: cover; /* Cover the entire window */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent image repetition */
+    height: 100vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+    position: fixed; /* Ensure it covers the entire window */
+    top: 0;
+    left: 0;
+    z-index: -1; /* Ensure it stays in the background */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
+/* Ensure the body and html take up the full window */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* Prevent scrolling */
+}

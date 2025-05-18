@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Sales Dashboard | Sales Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Welcome Message -->
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center">Welcome</h2>
+            <p class="text-center text-muted">Track and manage student enrollments and payments</p>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row text-center">
+        <!-- Total Collected -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-3 text-white" style="background: linear-gradient(135deg, #4CAF50, #81C784);">
+                <h4>Total Collected</h4>
+                <p class="fs-3">₹{{ total_collected }}</p>
+            </div>
+        </div>
+        <!-- Pending Payments -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-3 text-white" style="background: linear-gradient(135deg, #FFA726, #FFB74D);">
+                <h4>Pending Payments</h4>
+                <p class="fs-3">{{ pending_payments.count }}</p>
+            </div>
+        </div>
+        <!-- Students Enrolled -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 mb-3 text-white" style="background: linear-gradient(135deg, #42A5F5, #64B5F6);">
+                <h4>Students Enrolled</h4>
+                <p class="fs-3">{{ students.count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students Enrolled Table -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Students Enrolled</h3>
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Phone</th>
+                        <th>Payment Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.training_class.name }}</td>
+                        <td>{{ student.phone }}</td>
+                        <td>
+                            {% if student in fully_paid_students %}
+                                <span class="badge bg-success">Paid</span>
+                            {% else %}
+                                <span class="badge bg-danger">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'record_payment' student.id %}" class="btn btn-sm btn-primary">Record Payment</a>
+                            <a href="{% url 'create_pending_payment' student.id %}" class="btn btn-warning btn-sm">Set Pending Payment</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No students enrolled yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pending Payments List -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h3>Pending Payments</h3>
+            <ul class="list-group">
+                {% for payment in pending_payments %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ payment.student.name }} - <strong>₹{{ payment.due_amount }} Pending</strong>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No pending payments.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Fully Paid Students -->
+        <div class="col-md-6">
+            <h3>Fully Paid Students</h3>
+            <ul class="list-group">
+                {% for student in fully_paid_students %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ student.name }} ✅ Paid
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No students have fully paid yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

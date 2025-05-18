@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Sales Management{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5"> <!-- Increased width -->
+            <div class="form-container p-3 shadow rounded bg-white"> <!-- Reduced padding -->
+                <h2 class="text-center mb-3">Login</h2> <!-- Reduced margin -->
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group mb-2"> <!-- Reduced margin -->
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3"> <!-- Reduced margin -->
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+                <p class="text-center mt-2"> <!-- Reduced margin -->
+                    Don't have an account? <a href="{% url 'register' %}" class="text-decoration-none">Register here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom Styling for Login Form */
+    .form-container {
+        margin-top: 2px; /* Minimal space from navbar */
+    }
+
+    .form-container h2 {
+        color: #2c3e50; /* Dark blue for heading */
+        font-size: 1.5em; /* Slightly smaller heading */
+        margin-bottom: 10px; /* Reduced margin */
+    }
+
+    .form-container .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        padding: 5px; /* Reduced padding */
+        font-size: 0.95em; /* Slightly smaller font */
+    }
+
+    .form-container .form-control:focus {
+        border-color: #1abc9c; /* Green border on focus */
+        box-shadow: 0 0 5px rgba(26, 188, 156, 0.5);
+    }
+
+    .form-container .btn-primary {
+        background-color: #1abc9c; /* Green button */
+        border: none;
+        padding: 8px; /* Slightly reduced padding */
+        font-size: 1em; /* Slightly smaller font */
+        transition: background-color 0.3s;
+    }
+
+    .form-container .btn-primary:hover {
+        background-color: #16a085; /* Darker green on hover */
+    }
+
+    .form-container a {
+        color: #1abc9c; /* Green link */
+        text-decoration: none;
+    }
+
+    .form-container a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

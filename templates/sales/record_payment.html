@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Record Payment | Sales Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Record Payment for {{ student.name }}</h2>
+
+    <!-- Display Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="amount_paid" class="form-label">Amount Paid</label>
+            <input type="number" name="amount_paid" id="amount_paid" class="form-control" step="0.01" min="0" required>
+        </div>
+        <div class="mb-3">
+            <label for="payment_status" class="form-label">Payment Status</label>
+            <select name="payment_status" id="payment_status" class="form-select" required>
+                <option value="partial">Partial Payment</option>
+                <option value="full">Full Payment</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Record Payment</button>
+    </form>
+</div>
+{% endblock %}
